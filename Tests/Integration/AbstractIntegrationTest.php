@@ -28,8 +28,10 @@ use Trikoder\Bundle\OAuth2Bundle\League\Repository\RefreshTokenRepository;
 use Trikoder\Bundle\OAuth2Bundle\League\Repository\ScopeRepository;
 use Trikoder\Bundle\OAuth2Bundle\League\Repository\UserRepository;
 use Trikoder\Bundle\OAuth2Bundle\Manager\AccessTokenManagerInterface;
+use Trikoder\Bundle\OAuth2Bundle\Manager\AuthCodeManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ClientManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\InMemory\AccessTokenManager;
+use Trikoder\Bundle\OAuth2Bundle\Manager\InMemory\AuthCodeManager;
 use Trikoder\Bundle\OAuth2Bundle\Manager\InMemory\ClientManager;
 use Trikoder\Bundle\OAuth2Bundle\Manager\InMemory\RefreshTokenManager;
 use Trikoder\Bundle\OAuth2Bundle\Manager\InMemory\ScopeManager;
@@ -56,6 +58,11 @@ abstract class AbstractIntegrationTest extends TestCase
      * @var AccessTokenManagerInterface
      */
     protected $accessTokenManager;
+
+    /**
+     * @var AuthCodeManagerInterface
+     */
+    protected $authCodeManager;
 
     /**
      * @var RefreshTokenManagerInterface
@@ -91,13 +98,15 @@ abstract class AbstractIntegrationTest extends TestCase
         $this->clientManager = new ClientManager();
         $this->accessTokenManager = new AccessTokenManager();
         $this->refreshTokenManager = new RefreshTokenManager();
+        $this->authCodeManager = new AuthCodeManager();
         $this->eventDispatcher = new EventDispatcher();
 
         FixtureFactory::initializeFixtures(
             $this->scopeManager,
             $this->clientManager,
             $this->accessTokenManager,
-            $this->refreshTokenManager
+            $this->refreshTokenManager,
+            $this->authCodeManager
         );
 
         $scopeConverter = new ScopeConverter();

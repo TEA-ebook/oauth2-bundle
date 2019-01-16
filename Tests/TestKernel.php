@@ -15,7 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\AccessTokenManagerInterface;
+use Trikoder\Bundle\OAuth2Bundle\Manager\AuthCodeManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ClientManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\RefreshTokenManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ScopeManagerInterface;
@@ -139,6 +141,11 @@ final class TestKernel extends Kernel implements CompilerPassInterface
 
         $container->loadFromExtension('security', [
             'firewalls' => [
+                'auth' => [
+                    'pattern' => '^/authorize',
+                    'stateless' => true,
+                    'http_basic' => true,
+                ],
                 'test' => [
                     'pattern' => '^/security-test',
                     'stateless' => true,
@@ -150,11 +157,15 @@ final class TestKernel extends Kernel implements CompilerPassInterface
                     'memory' => [
                         'users' => [
                             FixtureFactory::FIXTURE_USER => [
+                                'password' => FixtureFactory::FIXTURE_PASSWORD,
                                 'roles' => ['ROLE_USER'],
                             ],
                         ],
                     ],
                 ],
+            ],
+            'encoders' => [
+                UserInterface::class => 'plaintext',
             ],
         ]);
 
@@ -219,6 +230,15 @@ final class TestKernel extends Kernel implements CompilerPassInterface
             ->getDefinition(
                 $container
                     ->getAlias(RefreshTokenManagerInterface::class)
+                    ->setPublic(true)
+            )
+            ->setPublic(true)
+        ;
+
+        $container
+            ->getDefinition(
+                $container
+                    ->getAlias(AuthCodeManagerInterface::class)
                     ->setPublic(true)
             )
             ->setPublic(true)
