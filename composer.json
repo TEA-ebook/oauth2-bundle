@@ -30,9 +30,7 @@
         "phpunit/phpunit": "7.5.*",
         "symfony/browser-kit": "^3.4|^4.2",
         "symfony/phpunit-bridge": "^3.4|^4.2",
-        "zendframework/zend-diactoros": "^2.1",
-        "symfony/twig-bundle": "~3.4|~4.0",
-        "symfony/form": "~3.4|~4.0"
+        "zendframework/zend-diactoros": "^2.1"
     },
     "autoload": {
         "psr-4": { "Trikoder\\Bundle\\OAuth2Bundle\\": "" },
@@ -46,9 +44,7 @@
     },
     "suggest": {
         "nelmio/cors-bundle": "For handling CORS requests",
-        "nyholm/psr7": "For a super lightweight PSR-7/17 implementation",
-        "symfony/form": "For the default decision interface",
-        "symfony/twig-bundle": "For the default decision interface"
+        "nyholm/psr7": "For a super lightweight PSR-7/17 implementation"
     },
     "config": {
         "sort-packages": true
