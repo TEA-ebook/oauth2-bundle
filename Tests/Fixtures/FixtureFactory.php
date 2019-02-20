@@ -4,12 +4,12 @@ namespace Trikoder\Bundle\OAuth2Bundle\Tests\Fixtures;
 
 use DateTime;
 use Trikoder\Bundle\OAuth2Bundle\Manager\AccessTokenManagerInterface;
-use Trikoder\Bundle\OAuth2Bundle\Manager\AuthCodeManagerInterface;
+use Trikoder\Bundle\OAuth2Bundle\Manager\AuthorizationCodeManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ClientManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\RefreshTokenManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ScopeManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
-use Trikoder\Bundle\OAuth2Bundle\Model\AuthCode;
+use Trikoder\Bundle\OAuth2Bundle\Model\AuthorizationCode;
 use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 use Trikoder\Bundle\OAuth2Bundle\Model\Grant;
 use Trikoder\Bundle\OAuth2Bundle\Model\RedirectUri;
@@ -68,7 +68,7 @@ final class FixtureFactory
         ClientManagerInterface $clientManager,
         AccessTokenManagerInterface $accessTokenManager,
         RefreshTokenManagerInterface $refreshTokenManager,
-        AuthCodeManagerInterface $authCodeManager
+        AuthorizationCodeManagerInterface $authCodeManager
     ): void {
         foreach (self::createScopes() as $scope) {
             $scopeManager->save($scope);
@@ -86,8 +86,8 @@ final class FixtureFactory
             $refreshTokenManager->save($refreshToken);
         }
 
-        foreach (self::createAuthCodes($clientManager) as $authCode) {
-            $authCodeManager->save($authCode);
+        foreach (self::createAuthorizationCodes($clientManager) as $authorizationCode) {
+            $authCodeManager->save($authorizationCode);
         }
     }
 
@@ -200,13 +200,13 @@ final class FixtureFactory
     }
 
     /**
-     * @return AuthCode[]
+     * @return AuthorizationCode[]
      */
-    public static function createAuthCodes(ClientManagerInterface $clientManager): array
+    public static function createAuthorizationCodes(ClientManagerInterface $clientManager): array
     {
-        $authCodes = [];
+        $authorizationCodes = [];
 
-        $authCodes[] = new AuthCode(
+        $authorizationCodes[] = new AuthorizationCode(
             self::FIXTURE_AUTH_CODE,
             new DateTime('+2 minute'),
             $clientManager->find(self::FIXTURE_CLIENT_FIRST),
@@ -214,7 +214,7 @@ final class FixtureFactory
             []
         );
 
-        $authCodes[] = new AuthCode(
+        $authorizationCodes[] = new AuthorizationCode(
             self::FIXTURE_AUTH_CODE_DIFFERENT_CLIENT,
             new DateTime('+2 minute'),
             $clientManager->find(self::FIXTURE_CLIENT_SECOND),
@@ -222,7 +222,7 @@ final class FixtureFactory
             []
         );
 
-        $authCodes[] = new AuthCode(
+        $authorizationCodes[] = new AuthorizationCode(
             self::FIXTURE_AUTH_CODE_EXPIRED,
             new DateTime('-30 minute'),
             $clientManager->find(self::FIXTURE_CLIENT_FIRST),
@@ -230,7 +230,7 @@ final class FixtureFactory
             []
         );
 
-        return $authCodes;
+        return $authorizationCodes;
     }
 
     /**
