@@ -26,6 +26,7 @@ final class Configuration implements ConfigurationInterface
 
     private function createAuthorizationServerNode(): NodeDefinition
     {
+        /** @var TreeBuilder $treeBuilder */
         $treeBuilder = $this->getWrappedTreeBuilder('authorization_server');
         $node = $treeBuilder->getRootNode();
 
@@ -46,6 +47,11 @@ final class Configuration implements ConfigurationInterface
                     ->info("The string used as an encryption key.\nHow to generate an encryption key: https://oauth2.thephpleague.com/installation/#string-password")
                     ->isRequired()
                     ->cannotBeEmpty()
+                ->end()
+                ->arrayNode('grant_types')
+                    ->info("Which grant types should be enabled.\nValues should be names of services implementing GrantTypeInterface.")
+                    ->scalarPrototype()->end()
+                    ->isRequired()
                 ->end()
                 ->scalarNode('access_token_ttl')
                     ->info("How long the issued access token should be valid for.\nThe value should be a valid interval: http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters")
