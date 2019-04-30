@@ -55,6 +55,13 @@ final class CreateClientCommand extends Command
                 'Sets allowed scope for client. Use this option multiple times to set multiple scopes.',
                 null
             )
+            ->addOption(
+                'name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sets the client human readable name (only used for internal reference).',
+                null
+            )
             ->addArgument(
                 'identifier',
                 InputArgument::OPTIONAL,
@@ -75,9 +82,11 @@ final class CreateClientCommand extends Command
         $this->clientManager->save($client);
         $io->success('New oAuth2 client created successfully.');
 
-        $headers = ['Identifier', 'Secret'];
+        $headers = ['Identifier', 'Secret', 'Name', 'Grants', 'Scopes'];
         $rows = [
-            [$client->getIdentifier(), $client->getSecret()],
+            [$client->getIdentifier(), $client->getSecret(),
+             $client->getName(), implode(' ', $client->getGrants()),
+             implode(' ', $client->getScopes())],
         ];
         $io->table($headers, $rows);
 
@@ -115,6 +124,8 @@ final class CreateClientCommand extends Command
             $input->getOption('scope')
         );
         $client->setScopes(...$scopes);
+
+        $client->setName($input->getOption('name'));
 
         return $client;
     }

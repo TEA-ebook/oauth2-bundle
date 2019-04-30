@@ -34,6 +34,11 @@ class Client
      */
     private $active = true;
 
+    /**
+     * @var string
+     */
+    private $name = null;
+
     public function __construct(string $identifier, string $secret)
     {
         $this->identifier = $identifier;
@@ -117,6 +122,18 @@ class Client
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
