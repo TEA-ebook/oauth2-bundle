@@ -29,7 +29,8 @@
         "friendsofphp/php-cs-fixer": "2.14.0",
         "phpunit/phpunit": "7.5.*",
         "symfony/browser-kit": "~3.4|~4.0",
-        "symfony/phpunit-bridge": "~4.0"
+        "symfony/phpunit-bridge": "~4.0",
+        "nyholm/psr7": "^1.1"
     },
     "autoload": {
         "psr-4": { "Trikoder\\Bundle\\OAuth2Bundle\\": "" },
