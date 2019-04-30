@@ -109,7 +109,7 @@ final class ScopeRepository implements ScopeRepositoryInterface
         $finalizedScopes = [];
 
         foreach ($requestedScopes as $requestedScope) {
-            if (!\in_array($requestedScope, $clientScopes, true)) {
+            if (!\in_array($requestedScope, $clientScopes, false)) {
                 throw OAuthServerException::invalidScope((string) $requestedScope);
             }
 
