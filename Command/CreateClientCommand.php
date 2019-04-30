@@ -13,6 +13,9 @@ use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 use Trikoder\Bundle\OAuth2Bundle\Model\Grant;
 use Trikoder\Bundle\OAuth2Bundle\Model\RedirectUri;
 use Trikoder\Bundle\OAuth2Bundle\Model\Scope;
+use Ramsey\Uuid\FeatureSet;
+use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\Uuid;
 
 final class CreateClientCommand extends Command
 {
@@ -83,8 +86,14 @@ final class CreateClientCommand extends Command
 
     private function buildClientFromInput(InputInterface $input)
     {
-        $identifier = $input->getArgument('identifier') ?? hash('md5', random_bytes(16));
-        $secret = $input->getArgument('secret') ?? hash('sha512', random_bytes(32));
+        $identifier = $input->getArgument('identifier');
+        if ($identifier === null) {
+            $uuidFactory = new UuidFactory(new FeatureSet(false, false, false, true));
+            Uuid::setFactory($uuidFactory);
+
+            $identifier = Uuid::uuid1();
+        }
+        $secret = $input->getArgument('secret') ?? bin2hex(random_bytes(20));
 
         $client = new Client($identifier, $secret);
         $client->setActive(true);
