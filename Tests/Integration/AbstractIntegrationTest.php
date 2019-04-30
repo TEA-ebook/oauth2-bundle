@@ -47,6 +47,8 @@ use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
 use Trikoder\Bundle\OAuth2Bundle\Model\RefreshToken;
 use Trikoder\Bundle\OAuth2Bundle\Tests\Fixtures\FixtureFactory;
 use Trikoder\Bundle\OAuth2Bundle\Tests\TestHelper;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\ServerRequest;
 
 abstract class AbstractIntegrationTest extends TestCase
 {
