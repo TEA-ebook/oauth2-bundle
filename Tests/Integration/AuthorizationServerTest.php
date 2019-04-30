@@ -110,7 +110,7 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
             'scope' => 'fancy rock',
         ]);
 
-        $response = $this->handleAuthorizationRequest($request);
+        $response = $this->handleTokenRequest($request);
 
         // Response assertions.
         $this->assertSame('invalid_scope', $response['error']);
@@ -210,7 +210,7 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
 
         timecop_freeze(new DateTime());
 
-        $response = $this->handleAuthorizationRequest($request);
+        $response = $this->handleTokenRequest($request);
 
         timecop_return();
 
@@ -377,7 +377,7 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
             'refresh_token' => TestHelper::generateEncryptedPayload($existingRefreshToken),
         ]);
 
-        $response = $this->handleAuthorizationRequest($request);
+        $response = $this->handleTokenRequest($request);
 
         // Response assertions.
         $this->assertSame('invalid_scope', $response['error']);
