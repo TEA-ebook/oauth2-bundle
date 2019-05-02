@@ -13,6 +13,9 @@ use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 use Trikoder\Bundle\OAuth2Bundle\Model\Grant;
 use Trikoder\Bundle\OAuth2Bundle\Model\RedirectUri;
 use Trikoder\Bundle\OAuth2Bundle\Model\Scope;
+use Ramsey\Uuid\FeatureSet;
+use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\Uuid;
 
 final class CreateClientCommand extends Command
 {
@@ -52,6 +55,13 @@ final class CreateClientCommand extends Command
                 'Sets allowed scope for client. Use this option multiple times to set multiple scopes.',
                 null
             )
+            ->addOption(
+                'name',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Sets the client human readable name (only used for internal reference).',
+                null
+            )
             ->addArgument(
                 'identifier',
                 InputArgument::OPTIONAL,
@@ -72,9 +82,11 @@ final class CreateClientCommand extends Command
         $this->clientManager->save($client);
         $io->success('New oAuth2 client created successfully.');
 
-        $headers = ['Identifier', 'Secret'];
+        $headers = ['Identifier', 'Secret', 'Name', 'Grants', 'Scopes'];
         $rows = [
-            [$client->getIdentifier(), $client->getSecret()],
+            [$client->getIdentifier(), $client->getSecret(),
+             $client->getName(), implode(' ', $client->getGrants()),
+             implode(' ', $client->getScopes())],
         ];
         $io->table($headers, $rows);
 
@@ -83,8 +95,14 @@ final class CreateClientCommand extends Command
 
     private function buildClientFromInput(InputInterface $input)
     {
-        $identifier = $input->getArgument('identifier') ?? hash('md5', random_bytes(16));
-        $secret = $input->getArgument('secret') ?? hash('sha512', random_bytes(32));
+        $identifier = $input->getArgument('identifier');
+        if ($identifier === null) {
+            $uuidFactory = new UuidFactory(new FeatureSet(false, false, false, true));
+            Uuid::setFactory($uuidFactory);
+
+            $identifier = Uuid::uuid1();
+        }
+        $secret = $input->getArgument('secret') ?? bin2hex(random_bytes(20));
 
         $client = new Client($identifier, $secret);
         $client->setActive(true);
@@ -106,6 +124,8 @@ final class CreateClientCommand extends Command
             $input->getOption('scope')
         );
         $client->setScopes(...$scopes);
+
+        $client->setName($input->getOption('name'));
 
         return $client;
     }
