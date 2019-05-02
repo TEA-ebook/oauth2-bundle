@@ -100,7 +100,7 @@ final class CreateClientCommand extends Command
             $uuidFactory = new UuidFactory(new FeatureSet(false, false, false, true));
             Uuid::setFactory($uuidFactory);
 
-            $identifier = Uuid::uuid1();
+            $identifier = Uuid::uuid4();
         }
         $secret = $input->getArgument('secret') ?? bin2hex(random_bytes(20));
 
